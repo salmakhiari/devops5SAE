@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  mysqldb:
+    image: mysql
+    container_name: mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_DATABASE: achatdb 
+    ports:
+     - 3306:3306
+    networks:
+     - projectdevops
+    
+  spring_app:
+    image: alaadhaouadi/achat
+    container_name: achatspring
+    ports:
+     - 8089:8089
+    depends_on:
+     - mysqldb
+    networks:
+      - projectdevops 
+    restart: on-failure
+    
+  angular_app:
+    image: wassim19/achatfront:1.0
+    container_name: achatangular
+    ports:
+     - 4200:4200
+    depends_on:
+     - spring_app
+    networks:
+     - projectdevops 
+networks:
+  projectdevops:
